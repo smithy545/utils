@@ -9,4 +9,5 @@ add_library(utils
         string_util.h
         util.h)
 target_link_libraries(utils fmt nlohmann_json_schema_validator)
-target_include_directories(utils PUBLIC ${PROJECT_SOURCE_DIR}/external/glm .)
+target_include_directories(utils PRIVATE ${PROJECT_SOURCE_DIR}/external/glm)
+target_include_directories(utils PUBLIC .)

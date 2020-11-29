@@ -11,7 +11,7 @@
 
 using std::runtime_error;
 
-namespace util::file {
+namespace utils::file {
     json read_json_file(const std::string &path, const json &schema) {
         std::ifstream file(path);
         if (file.good()) {
@@ -41,4 +41,4 @@ namespace util::file {
         file << data;
         file.close();
     }
-} // namespace util::file
+} // namespace utils::file

@@ -7,7 +7,7 @@
 #include <random>
 #include <sstream>
 
-namespace util::string {
+namespace utils::string {
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> dis(0, 15);
@@ -40,4 +40,4 @@ namespace util::string {
         }
         return ss.str();
     }
-} // namespace util::string
+} // namespace utils::string

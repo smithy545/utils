@@ -6,7 +6,8 @@
 
 #include <utility>
 
-namespace util::math {
+
+namespace utils::math {
     std::vector<int *> generated_binomial_coeffs;
     int max_generated_degree = 0;
 
@@ -163,14 +164,14 @@ namespace util::math {
 
     std::vector<glm::vec3> generate_box(double width, double height, double length) {
         return {
-                {0,     0,      0},
-                {width, 0,      0},
+                {0, 0, 0},
+                {width, 0, 0},
                 {width, height, 0},
-                {0,     height, 0},
-                {0,     0,      length},
-                {width, 0,      length},
+                {0, height, 0},
+                {0, 0, length},
+                {width, 0, length},
                 {width, height, length},
-                {0,     height, length}
+                {0, height, length}
         };
     }
 
@@ -182,6 +183,8 @@ namespace util::math {
     }
 
     double compute_parabola_x(glm::vec2 focus, double directrix_y, double y, bool right_zero) {
+        if(focus.y == directrix_y)
+            return focus.x;
         auto root = glm::sqrt(
                 2 * y * focus.y - 2 * y * directrix_y - focus.y * focus.y + directrix_y * directrix_y);
         return right_zero ? focus.x + root : focus.x - root;
@@ -193,17 +196,30 @@ namespace util::math {
 
     double compute_parabolic_collision_x(glm::vec2 focus1, glm::vec2 focus2, double directrix_y) {
         double x1 = focus1.x, y1 = focus1.y, x2 = focus2.x, y2 = focus2.y;
-        double d1 = 1.0 / (2.0 * (y1 - directrix_y));
-        double d2 = 1.0 / (2.0 * (y2 - directrix_y));
+        double d1 = 1.0 / (2.0 * (directrix_y - y1));
+        double d2 = 1.0 / (2.0 * (directrix_y - y2));
         double a = d1 - d2;
-        double b = 2.0 * (x2 * d2 - x1 * d1);
+        double b = 2.0 * (x1 * d1 - x2 * d2);
         double c = (y1 * y1 + x1 * x1 - directrix_y * directrix_y) * d1 -
                    (y2 * y2 + x2 * x2 - directrix_y * directrix_y) * d2;
         double delta = b * b - 4.0 * a * c;
-        return (-b + std::sqrt(delta)) / (2.0 * a);
+        return (b - std::sqrt(delta)) / (2.0 * a);
     }
 
     double compute_parabola_slope(glm::vec2 focus, double directrix_y, double x) {
+        if(focus.y == directrix_y)
+            return std::numeric_limits<double>::infinity();
         return (x - focus.x) / (focus.y - directrix_y);
     }
-} // namespace util::math
+
+    glm::vec2 compute_line_collision(glm::vec2 origin1, double slope1, glm::vec2 origin2, double slope2) {
+        assert(slope1 != slope2);
+        if(slope1 == std::numeric_limits<double>::infinity())
+            return glm::vec2(origin1.x, origin2.y + (origin1.x - origin2.x) * slope2);
+        if(slope2 == std::numeric_limits<double>::infinity())
+            return glm::vec2(origin2.x, origin1.y + (origin2.x - origin1.x) * slope1);
+        auto x = (slope1 * origin1.x - slope2 * origin2.x + origin2.y - origin1.y) / (slope1 - slope2);
+        auto y = slope1 * (x - origin1.x) + origin1.y;
+        return glm::vec2(x, y);
+    }
+} // namespace utils::math

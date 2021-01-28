@@ -26,6 +26,10 @@ namespace utils::math {
 
     glm::vec2 compute_line_collision(glm::vec2 origin1, double slope1, glm::vec2 origin2, double slope2);
 
+    bool check_overflow(double val);
+
+    bool check_overflow(float val);
+
     /* 2-D utils */
     std::vector<glm::vec2> generate_bezier_curve(std::vector<glm::vec2> control_points, double step_size);
 

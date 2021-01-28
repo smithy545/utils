@@ -222,4 +222,12 @@ namespace utils::math {
         auto y = slope1 * (x - origin1.x) + origin1.y;
         return glm::vec2(x, y);
     }
+
+    bool check_overflow(double val) {
+        return (val + 1.0) == val;
+    }
+
+    bool check_overflow(float val) {
+        return (val + 1.0f) == val;
+    }
 } // namespace utils::math

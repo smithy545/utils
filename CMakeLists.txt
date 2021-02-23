@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.16)
 
 add_library(utils
+        algorithm_util.cpp
+        algorithm_util.h
         file_util.cpp
         file_util.h
         math_util.cpp

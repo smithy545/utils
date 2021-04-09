@@ -16,15 +16,9 @@ namespace utils::math {
 
     int binomial_coeff(int n, int k);
 
-    double compute_parabola_x(glm::vec2 focus, double directrix_y, double y, bool right_zero = true);
-
     double compute_parabola_y(glm::vec2 focus, double directrix_y, double x);
 
-    double compute_parabola_slope(glm::vec2 focus, double directrix_y, double x);
-
-    double compute_parabolic_collision_x(glm::vec2 focus1, glm::vec2 focus2, double directrix_y);
-
-    glm::vec2 compute_line_collision(glm::vec2 origin1, double slope1, glm::vec2 origin2, double slope2);
+    double compute_parabolic_collision_x(glm::vec2 left, glm::vec2 right, double directrix_y);
 
     bool check_overflow(double val);
 

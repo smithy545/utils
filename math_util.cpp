@@ -182,20 +182,20 @@ namespace utils::math {
         return y;
     }
 
-    double compute_parabola_x(glm::vec2 focus, double directrix_y, double y, bool right_zero) {
-        if(focus.y == directrix_y)
-            return focus.x;
-        auto root = glm::sqrt(
-                2 * y * focus.y - 2 * y * directrix_y - focus.y * focus.y + directrix_y * directrix_y);
-        return right_zero ? focus.x + root : focus.x - root;
-    }
-
     double compute_parabola_y(glm::vec2 focus, double directrix_y, double x) {
         return 0.5 * (glm::pow(x - focus.x, 2) / (focus.y - directrix_y) + (focus.y + directrix_y));
     }
 
-    double compute_parabolic_collision_x(glm::vec2 focus1, glm::vec2 focus2, double directrix_y) {
-        double x1 = focus1.x, y1 = focus1.y, x2 = focus2.x, y2 = focus2.y;
+    double compute_parabolic_collision_x(glm::vec2 left, glm::vec2 right, double directrix_y) {
+        // ORDER OF PARAMS MATTERS
+        double x1 = right.x, y1 = right.y, x2 = left.x, y2 = left.y;
+        if(y1 == directrix_y) {
+            assert(y2 != directrix_y);
+            return x1;
+        } else if(y2 == directrix_y)
+            return x2;
+        else if(y1 == y2)
+            return (x1 + x2)/2.0;
         double d1 = 1.0 / (2.0 * (directrix_y - y1));
         double d2 = 1.0 / (2.0 * (directrix_y - y2));
         double a = d1 - d2;
@@ -204,23 +204,6 @@ namespace utils::math {
                    (y2 * y2 + x2 * x2 - directrix_y * directrix_y) * d2;
         double delta = b * b - 4.0 * a * c;
         return (b - std::sqrt(delta)) / (2.0 * a);
-    }
-
-    double compute_parabola_slope(glm::vec2 focus, double directrix_y, double x) {
-        if(focus.y == directrix_y)
-            return std::numeric_limits<double>::infinity();
-        return (x - focus.x) / (focus.y - directrix_y);
-    }
-
-    glm::vec2 compute_line_collision(glm::vec2 origin1, double slope1, glm::vec2 origin2, double slope2) {
-        assert(slope1 != slope2);
-        if(slope1 == std::numeric_limits<double>::infinity())
-            return glm::vec2(origin1.x, origin2.y + (origin1.x - origin2.x) * slope2);
-        if(slope2 == std::numeric_limits<double>::infinity())
-            return glm::vec2(origin2.x, origin1.y + (origin2.x - origin1.x) * slope1);
-        auto x = (slope1 * origin1.x - slope2 * origin2.x + origin2.y - origin1.y) / (slope1 - slope2);
-        auto y = slope1 * (x - origin1.x) + origin1.y;
-        return glm::vec2(x, y);
     }
 
     bool check_overflow(double val) {

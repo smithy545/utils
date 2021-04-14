@@ -190,7 +190,6 @@ namespace utils::math {
         // ORDER OF PARAMS MATTERS
         double x1 = right.x, y1 = right.y, x2 = left.x, y2 = left.y;
         if(y1 == directrix_y) {
-            // TODO: Properly handle y1=y2=directrix case
             assert(y2 != directrix_y);
             return x1;
         } else if(y2 == directrix_y)

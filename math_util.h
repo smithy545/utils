@@ -24,6 +24,12 @@ namespace utils::math {
 
     bool check_overflow(float val);
 
+    bool on_segment(glm::vec2 p, glm::vec2 q, glm::vec2 r);
+
+    int orientation(glm::vec2 p, glm::vec2 q, glm::vec2 r);
+
+    bool do_intersect(glm::vec2 p1, glm::vec2 q1, glm::vec2 p2, glm::vec2 q2);
+
     /* 2-D utils */
     std::vector<glm::vec2> generate_bezier_curve(std::vector<glm::vec2> control_points, double step_size);
 

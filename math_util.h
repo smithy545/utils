@@ -20,6 +20,8 @@ namespace utils::math {
 
     double compute_parabolic_collision_x(glm::vec2 left, glm::vec2 right, double directrix_y);
 
+    bool in_rect(glm::vec2 p, rect r);
+
     bool check_overflow(double val);
 
     bool check_overflow(float val);

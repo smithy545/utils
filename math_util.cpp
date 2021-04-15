@@ -206,6 +206,13 @@ namespace utils::math {
         return (b - std::sqrt(delta)) / (2.0 * a);
     }
 
+    bool in_rect(glm::vec2 p, rect r) {
+        return p.x >= r.x
+           && p.y >= r.y
+           && p.x < r.x + r.w
+           && p.y < r.y + r.h;
+    }
+
     bool check_overflow(double val) {
         return (val + 1.0) == val;
     }

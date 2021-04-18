@@ -1,13 +1,11 @@
 cmake_minimum_required(VERSION 3.16)
 
+add_subdirectory(external/fmt)
+add_subdirectory(external/json)
+add_subdirectory(external/json-schema-validator)
 add_library(utils
-        file_util.cpp
-        file_util.h
-        math_util.cpp
-        math_util.h
-        string_util.cpp
-        string_util.h
-        util.h)
-target_link_libraries(utils fmt nlohmann_json_schema_validator)
-target_include_directories(utils PRIVATE ${PROJECT_SOURCE_DIR}/external/glm)
-target_include_directories(utils PUBLIC .)
+        src/file_util.cpp
+        src/math_util.cpp
+        src/string_util.cpp)
+target_link_libraries(utils fmt nlohmann_json_schema_validator glm)
+target_include_directories(utils PUBLIC include)

@@ -2,7 +2,7 @@
 // Created by Philip on 5/11/2020.
 //
 
-#include "math_util.h"
+#include <utils/math_util.h>
 
 #include <utility>
 
@@ -280,5 +280,4 @@ namespace utils::math {
 
         return false; // Doesn't fall in any of the above cases
     }
-
 } // namespace utils::math

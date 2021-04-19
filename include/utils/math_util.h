@@ -32,6 +32,8 @@ namespace utils::math {
 
     bool do_intersect(glm::vec2 p1, glm::vec2 q1, glm::vec2 p2, glm::vec2 q2);
 
+    glm::vec2 compute_triangle_circumcenter(glm::vec2 a, glm::vec2 b, glm::vec2 c);
+
     /* 2-D utils */
     std::vector<glm::vec2> generate_bezier_curve(std::vector<glm::vec2> control_points, double step_size);
 

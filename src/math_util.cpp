@@ -280,4 +280,16 @@ namespace utils::math {
 
         return false; // Doesn't fall in any of the above cases
     }
+
+    glm::vec2 compute_triangle_circumcenter(glm::vec2 a, glm::vec2 b, glm::vec2 c) {
+        // Reference: https://mapbox.github.io/delaunator : circumcenter function
+        auto ad = a[0] * a[0] + a[1] * a[1];
+        auto bd = b[0] * b[0] + b[1] * b[1];
+        auto cd = c[0] * c[0] + c[1] * c[1];
+        auto D = 2 * (a[0] * (b[1] - c[1]) + b[0] * (c[1] - a[1]) + c[0] * (a[1] - b[1]));
+        return glm::vec2(
+                1.0 / D * (ad * (b[1] - c[1]) + bd * (c[1] - a[1]) + cd * (a[1] - b[1])),
+                1.0 / D * (ad * (c[0] - b[0]) + bd * (a[0] - c[0]) + cd * (b[0] - a[0]))
+        );
+    }
 } // namespace utils::math

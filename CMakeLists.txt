@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.16)
 
-add_subdirectory(external/fmt)
 add_subdirectory(external/json)
 add_subdirectory(external/json-schema-validator)
 add_library(utils

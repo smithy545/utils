@@ -2,8 +2,8 @@
 // Created by Philip Smith on 10/17/2020.
 //
 
-#ifndef CIVILWAR_MACROS_H
-#define CIVILWAR_MACROS_H
+#ifndef UTILS_MACROS_H
+#define UTILS_MACROS_H
 
 #include <memory>
 #include <utility>
@@ -53,4 +53,4 @@
 #define MVAR_REF(TYPE, NAME, GET_ACCESS, SET_ACCESS) _VAR(TYPE, NAME, GET_REF, GET_ACCESS, MOVE_AND_SET, SET_ACCESS)
 #define MVAR_SET(TYPE, NAME, ACCESS) _VAR(TYPE, NAME, NOOP, EMPTY, MOVE_AND_SET, ACCESS)
 
-#endif //CIVILWAR_MACROS_H
+#endif //UTILS_MACROS_H

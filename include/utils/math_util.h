@@ -2,8 +2,8 @@
 // Created by Philip on 5/11/2020.
 //
 
-#ifndef PHILUTIL_MATH_UTIL_H
-#define PHILUTIL_MATH_UTIL_H
+#ifndef UTILS_MATH_UTIL_H
+#define UTILS_MATH_UTIL_H
 
 #include <glm/glm.hpp>
 #include <vector>
@@ -67,4 +67,4 @@ namespace utils::math {
     // TODO: std::vector<float> bezier_matrix(std::vector<float> control_points, double step_size, int dimension);
 } // namespace utils::math
 
-#endif //PHILUTIL_MATH_UTIL_H
+#endif //UTILS_MATH_UTIL_H

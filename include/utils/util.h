@@ -2,8 +2,8 @@
 // Created by Philip Smith on 11/14/2020.
 //
 
-#ifndef PHILUTIL_UTIL_H
-#define PHILUTIL_UTIL_H
+#ifndef UTILS_UTIL_H
+#define UTILS_UTIL_H
 
 #include "file_util.h"
 #include "math_util.h"
@@ -13,4 +13,4 @@
 // Drops 's' to differentiate and cause I felt like it
 namespace util {} // namespace util
 
-#endif //PHILUTIL_UTIL_H
+#endif //UTILS_UTIL_H

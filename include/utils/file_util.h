@@ -2,8 +2,8 @@
 // Created by Philip on 3/2/2020.
 //
 
-#ifndef PHILUTIL_FILE_UTIL_H
-#define PHILUTIL_FILE_UTIL_H
+#ifndef UTILS_FILE_UTIL_H
+#define UTILS_FILE_UTIL_H
 
 #include <nlohmann/json-schema.hpp>
 #include <nlohmann/json.hpp>
@@ -18,4 +18,4 @@ namespace utils::file {
     void write_json_file(const std::string &path, const json &data);
 } // namespace utils::file
 
-#endif //PHILUTIL_FILE_UTIL_H
+#endif //UTILS_FILE_UTIL_H

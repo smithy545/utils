@@ -8,4 +8,6 @@ add_library(utils
         src/math_util.cpp
         src/string_util.cpp)
 target_link_libraries(utils fmt nlohmann_json_schema_validator)
-target_include_directories(utils PRIVATE /opt/homebrew/Cellar/glm/0.9.9.8/include PUBLIC include)
+target_include_directories(utils
+        PRIVATE external/delaunator-cpp/include /opt/homebrew/Cellar/glm/0.9.9.8/include
+        PUBLIC include)

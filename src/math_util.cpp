@@ -4,6 +4,7 @@
 
 #include <utils/math_util.h>
 
+#include <delaunator-header-only.hpp>
 #include <utility>
 
 
@@ -220,6 +221,22 @@ namespace utils::math {
     bool check_overflow(float val) {
         return (val + 1.0f) == val;
     }
+
+    std::vector<glm::vec2> triangulate(const std::vector<double> &coords) {
+        std::vector<glm::vec2> verts;
+        delaunator::Delaunator d(coords);
+        for(int i = 0; i < d.triangles.size(); i += 3) {
+            auto i1 = 2*d.triangles[i];
+            auto i2 = 2*d.triangles[i+1];
+            auto i3 = 2*d.triangles[i+2];
+            verts.emplace_back(d.coords[i1], d.coords[i1+1]);
+            verts.emplace_back(d.coords[i2], d.coords[i2+1]);
+            verts.emplace_back(d.coords[i3], d.coords[i3+1]);
+        }
+
+        return verts;
+    }
+
 
     // Reference: https://www.geeksforgeeks.org/check-if-two-given-line-segments-intersect/
     // Given three colinear points p, q, r, the function checks if

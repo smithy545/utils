@@ -34,6 +34,8 @@ namespace utils::math {
 
     glm::vec2 compute_triangle_circumcenter(glm::vec2 a, glm::vec2 b, glm::vec2 c);
 
+    std::vector<glm::vec2> triangulate(const std::vector<double> &coords);
+
     /* 2-D utils */
     std::vector<glm::vec2> generate_bezier_curve(std::vector<glm::vec2> control_points, double step_size);
 

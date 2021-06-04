@@ -237,7 +237,6 @@ namespace utils::math {
         return verts;
     }
 
-
     // Reference: https://www.geeksforgeeks.org/check-if-two-given-line-segments-intersect/
     // Given three colinear points p, q, r, the function checks if
     // point q lies on line segment 'pr'
@@ -298,8 +297,8 @@ namespace utils::math {
         return false; // Doesn't fall in any of the above cases
     }
 
+    // Reference: https://mapbox.github.io/delaunator : circumcenter function
     glm::vec2 compute_triangle_circumcenter(glm::vec2 a, glm::vec2 b, glm::vec2 c) {
-        // Reference: https://mapbox.github.io/delaunator : circumcenter function
         auto ad = a[0] * a[0] + a[1] * a[1];
         auto bd = b[0] * b[0] + b[1] * b[1];
         auto cd = c[0] * c[0] + c[1] * c[1];

@@ -22,7 +22,7 @@ namespace utils::math {
             coeffs[s] = 1;
             generated_binomial_coeffs.push_back(coeffs);
             max_generated_degree++;
-            //delete[] coeffs;
+            delete[] coeffs;
         }
 
         return generated_binomial_coeffs[n][k];

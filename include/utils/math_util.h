@@ -5,6 +5,7 @@
 #ifndef UTILS_MATH_UTIL_H
 #define UTILS_MATH_UTIL_H
 
+#include <LinearMath/btVector3.h>
 #include <glm/glm.hpp>
 #include <vector>
 
@@ -19,6 +20,10 @@ namespace utils::math {
     double compute_parabola_y(glm::vec2 focus, double directrix_y, double x);
 
     double compute_parabolic_collision_x(glm::vec2 left, glm::vec2 right, double directrix_y);
+
+    glm::vec3 bt2g(const btVector3& vec);
+
+    btVector3 g2bt(const glm::vec3& vec);
 
     bool in_rect(glm::vec2 p, rect r);
 

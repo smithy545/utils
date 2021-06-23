@@ -8,6 +8,9 @@
 #include <fmt/format.h>
 #include <fstream>
 #include <iostream>
+#include <png.h>
+#include <pngstruct.h>
+#include <pnginfo.h>
 
 
 using std::runtime_error;
@@ -32,14 +35,59 @@ namespace utils::file {
             }
             return data;
         }
-        std::string message = fmt::format("Can't read json file at {0}", path);
+        std::string message = fmt::format("Error reading json file at {0}", path);
         throw runtime_error(message.c_str());
     }
 
-    void write_json_file(const std::string &path, const json &data) {
-        std::ofstream file;
-        file.open(path, std::ofstream::out);
-        file << data;
-        file.close();
+    GLuint read_png_file_to_texture(const std::string &path) {
+        FILE* fp = fopen(path.c_str(), "rb");
+        if(!fp) {
+            std::string message = fmt::format("Error reading png file at {0}", path);
+            throw runtime_error(message.c_str());
+        }
+        char header[8];
+        fread(header, 1, 8, fp);
+        if(!png_sig_cmp(reinterpret_cast<png_const_bytep>(header), 0, 8)) {
+            png_structp png_ptr = png_create_read_struct(PNG_LIBPNG_VER_STRING, nullptr, nullptr, nullptr);
+            if(!png_ptr) {
+                std::string message = fmt::format("Failed to create png read struct {0}", path);
+                throw runtime_error(message.c_str());
+            }
+            png_infop info_ptr = png_create_info_struct(png_ptr);
+            if(!info_ptr){
+                png_destroy_read_struct(&png_ptr,(png_infopp)NULL, (png_infopp)NULL);
+                std::string message = fmt::format("Failed to create png info struct {0}", path);
+                throw runtime_error(message.c_str());
+            }
+            png_infop end_info = png_create_info_struct(png_ptr);
+            if(!end_info){
+                png_destroy_read_struct(&png_ptr, &info_ptr,(png_infopp)NULL);
+                std::string message = fmt::format("Failed to create png end info struct {0}", path);
+                throw runtime_error(message.c_str());
+            }
+            if(setjmp(png_jmpbuf(png_ptr))){
+                png_destroy_read_struct(&png_ptr, &info_ptr,&end_info);
+                fclose(fp);
+                std::string message = fmt::format("Lib png error {0}", path);
+                throw runtime_error(message.c_str());
+            }
+            png_set_sig_bytes(png_ptr, 8);
+            png_init_io(png_ptr, fp);
+            auto png_transforms = PNG_TRANSFORM_IDENTITY;
+            png_read_png(png_ptr, info_ptr, png_transforms, NULL);
+            auto w = info_ptr->width;
+            auto h = info_ptr->height;
+            GLuint tex_id;
+            glGenTextures(1, &tex_id);
+            glBindTexture(GL_TEXTURE_2D, tex_id);
+            // TODO: use colospace and channel information in info_ptr to ensure proper texture generation
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, info_ptr->row_pointers);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+            png_destroy_read_struct(&png_ptr, &info_ptr,&end_info);
+            return tex_id;
+        }
+        std::string message = fmt::format("File header at {0} does not match png", path);
+        throw runtime_error(message.c_str());
     }
 } // namespace utils::file

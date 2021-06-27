@@ -75,16 +75,26 @@ namespace utils::file {
             png_init_io(png_ptr, fp);
             auto png_transforms = PNG_TRANSFORM_IDENTITY;
             png_read_png(png_ptr, info_ptr, png_transforms, NULL);
+            // Todo: find a way to pass info_ptr->row_pointers directly to glTexImage2D without moving to data[]
             auto w = info_ptr->width;
             auto h = info_ptr->height;
+            auto* data = new unsigned char[h*info_ptr->rowbytes];
+            for(int y = 0; y < h; y++) {
+                for(int x = 0; x < info_ptr->rowbytes; x += 4) {
+                    data[y*info_ptr->rowbytes + x] = info_ptr->row_pointers[y][x];
+                    data[y*info_ptr->rowbytes + x + 1] = info_ptr->row_pointers[y][x+1];
+                    data[y*info_ptr->rowbytes + x + 2] = info_ptr->row_pointers[y][x+2];
+                    data[y*info_ptr->rowbytes + x + 3] = info_ptr->row_pointers[y][x+3];
+                }
+            }
             GLuint tex_id;
             glGenTextures(1, &tex_id);
             glBindTexture(GL_TEXTURE_2D, tex_id);
-            // TODO: use colospace and channel information in info_ptr to ensure proper texture generation
-            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, info_ptr->row_pointers);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-            png_destroy_read_struct(&png_ptr, &info_ptr,&end_info);
+            png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
+            delete data;
             return tex_id;
         }
         std::string message = fmt::format("File header at {0} does not match png", path);

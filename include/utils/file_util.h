@@ -18,6 +18,8 @@ namespace utils::file {
     json read_json_file(const std::string &path, const json &schema = nullptr);
 
     GLuint read_png_file_to_texture(const std::string &path);
+
+    std::string read_file_to_string(const std::string &path);
 } // namespace utils::file
 
 #endif //UTILS_FILE_UTIL_H

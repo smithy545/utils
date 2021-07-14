@@ -143,4 +143,15 @@ namespace utils::file {
         std::string message = fmt::format("File header at {0} does not match png", path);
         throw runtime_error(message.c_str());
     }
+
+    std::string read_file_to_string(const std::string &path) {
+        std::ifstream file(path);
+        if (file.good()) {
+            std::string data{(std::istreambuf_iterator<char>(file)),
+                             (std::istreambuf_iterator<char>())};
+            return data;
+        }
+        std::string message = fmt::format("Error reading file at {0}", path);
+        throw runtime_error(message.c_str());
+    }
 } // namespace utils::file

@@ -28,11 +28,11 @@ namespace utils::math {
         return generated_binomial_coeffs[n][k];
     }
 
-    glm::vec3 bt2g(const btVector3& vec) {
+    glm::vec3 bt2glm(const btVector3& vec) {
         return glm::vec3{vec.x(), vec.y(), vec.z()};
     }
 
-    btVector3 g2bt(const glm::vec3& vec) {
+    btVector3 glm2bt(const glm::vec3& vec) {
         return btVector3{vec.x, vec.y, vec.z};
     }
 

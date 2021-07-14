@@ -21,9 +21,9 @@ namespace utils::math {
 
     double compute_parabolic_collision_x(glm::vec2 left, glm::vec2 right, double directrix_y);
 
-    glm::vec3 bt2g(const btVector3& vec);
+    glm::vec3 bt2glm(const btVector3& vec);
 
-    btVector3 g2bt(const glm::vec3& vec);
+    btVector3 glm2bt(const glm::vec3& vec);
 
     bool in_rect(glm::vec2 p, rect r);
 

@@ -5,10 +5,29 @@
 #ifndef UTILS_MATH_UTIL_H
 #define UTILS_MATH_UTIL_H
 
-#include <LinearMath/btVector3.h>
+#include <fmt/format.h>
+#include <functional>
 #include <glm/glm.hpp>
+#include <LinearMath/btVector3.h>
+#include <string>
 #include <vector>
 
+
+namespace std {
+    template <>
+    struct hash<glm::vec2> {
+        size_t operator()(const glm::vec2& p) const {
+            return hash<std::string>()(fmt::format("{}:{}", p.x, p.y));
+        }
+    };
+
+    template <>
+    struct hash<glm::vec3> {
+        size_t operator()(const glm::vec3& p) const {
+            return hash<std::string>()(fmt::format("{}:{}:{}", p.x, p.y, p.z));
+        }
+    };
+}
 
 namespace utils::math {
     struct rect {

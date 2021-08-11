@@ -154,4 +154,11 @@ namespace utils::file {
         std::string message = fmt::format("Error reading file at {0}", path);
         throw runtime_error(message.c_str());
     }
+
+    void write_json_file(const std::string &path, const json &data) {
+        std::ofstream file;
+        file.open(path);
+        file << data;
+        file.close();
+    }
 } // namespace utils::file

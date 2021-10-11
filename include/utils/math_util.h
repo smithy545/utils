@@ -27,7 +27,7 @@ namespace std {
             return hash<std::string>()(fmt::format("{}:{}:{}", p.x, p.y, p.z));
         }
     };
-}
+} // namespace std
 
 namespace utils::math {
     struct rect {

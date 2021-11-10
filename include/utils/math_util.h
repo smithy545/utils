@@ -2,12 +2,32 @@
 // Created by Philip on 5/11/2020.
 //
 
-#ifndef PHILUTIL_MATH_UTIL_H
-#define PHILUTIL_MATH_UTIL_H
+#ifndef UTILS_MATH_UTIL_H
+#define UTILS_MATH_UTIL_H
 
+#include <fmt/format.h>
+#include <functional>
 #include <glm/glm.hpp>
+#include <LinearMath/btVector3.h>
+#include <string>
 #include <vector>
 
+
+namespace std {
+    template <>
+    struct hash<glm::vec2> {
+        size_t operator()(const glm::vec2& p) const {
+            return hash<std::string>()(fmt::format("{}:{}", p.x, p.y));
+        }
+    };
+
+    template <>
+    struct hash<glm::vec3> {
+        size_t operator()(const glm::vec3& p) const {
+            return hash<std::string>()(fmt::format("{}:{}:{}", p.x, p.y, p.z));
+        }
+    };
+} // namespace std
 
 namespace utils::math {
     struct rect {
@@ -19,6 +39,10 @@ namespace utils::math {
     double compute_parabola_y(glm::vec2 focus, double directrix_y, double x);
 
     double compute_parabolic_collision_x(glm::vec2 left, glm::vec2 right, double directrix_y);
+
+    glm::vec3 bt2glm(const btVector3& vec);
+
+    btVector3 glm2bt(const glm::vec3& vec);
 
     bool in_rect(glm::vec2 p, rect r);
 
@@ -33,6 +57,8 @@ namespace utils::math {
     bool do_intersect(glm::vec2 p1, glm::vec2 q1, glm::vec2 p2, glm::vec2 q2);
 
     glm::vec2 compute_triangle_circumcenter(glm::vec2 a, glm::vec2 b, glm::vec2 c);
+
+    std::vector<glm::vec2> triangulate(const std::vector<double> &coords);
 
     /* 2-D utils */
     std::vector<glm::vec2> generate_bezier_curve(std::vector<glm::vec2> control_points, double step_size);
@@ -67,4 +93,4 @@ namespace utils::math {
     // TODO: std::vector<float> bezier_matrix(std::vector<float> control_points, double step_size, int dimension);
 } // namespace utils::math
 
-#endif //PHILUTIL_MATH_UTIL_H
+#endif //UTILS_MATH_UTIL_H

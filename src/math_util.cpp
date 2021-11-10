@@ -4,6 +4,7 @@
 
 #include <utils/math_util.h>
 
+#include <delaunator-header-only.hpp>
 #include <utility>
 
 
@@ -21,10 +22,18 @@ namespace utils::math {
             coeffs[s] = 1;
             generated_binomial_coeffs.push_back(coeffs);
             max_generated_degree++;
-            //delete[] coeffs;
+            delete[] coeffs;
         }
 
         return generated_binomial_coeffs[n][k];
+    }
+
+    glm::vec3 bt2glm(const btVector3& vec) {
+        return glm::vec3{vec.x(), vec.y(), vec.z()};
+    }
+
+    btVector3 glm2bt(const glm::vec3& vec) {
+        return btVector3{vec.x, vec.y, vec.z};
     }
 
     std::vector<glm::vec2> generate_bezier_curve(std::vector<glm::vec2> control_points, double step_size) {
@@ -221,6 +230,21 @@ namespace utils::math {
         return (val + 1.0f) == val;
     }
 
+    std::vector<glm::vec2> triangulate(const std::vector<double> &coords) {
+        std::vector<glm::vec2> verts;
+        delaunator::Delaunator d(coords);
+        for(int i = 0; i < d.triangles.size(); i += 3) {
+            auto i1 = 2*d.triangles[i];
+            auto i2 = 2*d.triangles[i+1];
+            auto i3 = 2*d.triangles[i+2];
+            verts.emplace_back(d.coords[i1], d.coords[i1+1]);
+            verts.emplace_back(d.coords[i2], d.coords[i2+1]);
+            verts.emplace_back(d.coords[i3], d.coords[i3+1]);
+        }
+
+        return verts;
+    }
+
     // Reference: https://www.geeksforgeeks.org/check-if-two-given-line-segments-intersect/
     // Given three colinear points p, q, r, the function checks if
     // point q lies on line segment 'pr'
@@ -281,8 +305,8 @@ namespace utils::math {
         return false; // Doesn't fall in any of the above cases
     }
 
+    // Reference: https://mapbox.github.io/delaunator : circumcenter function
     glm::vec2 compute_triangle_circumcenter(glm::vec2 a, glm::vec2 b, glm::vec2 c) {
-        // Reference: https://mapbox.github.io/delaunator : circumcenter function
         auto ad = a[0] * a[0] + a[1] * a[1];
         auto bd = b[0] * b[0] + b[1] * b[1];
         auto cd = c[0] * c[0] + c[1] * c[1];

@@ -4,7 +4,7 @@
 
 #include <utils/math_util.h>
 
-#include <delaunator-header-only.hpp>
+#include <boost/iterator/function_output_iterator.hpp>
 #include <utility>
 
 
@@ -230,21 +230,6 @@ namespace utils::math {
         return (val + 1.0f) == val;
     }
 
-    std::vector<glm::vec2> triangulate(const std::vector<double> &coords) {
-        std::vector<glm::vec2> verts;
-        delaunator::Delaunator d(coords);
-        for(int i = 0; i < d.triangles.size(); i += 3) {
-            auto i1 = 2*d.triangles[i];
-            auto i2 = 2*d.triangles[i+1];
-            auto i3 = 2*d.triangles[i+2];
-            verts.emplace_back(d.coords[i1], d.coords[i1+1]);
-            verts.emplace_back(d.coords[i2], d.coords[i2+1]);
-            verts.emplace_back(d.coords[i3], d.coords[i3+1]);
-        }
-
-        return verts;
-    }
-
     // Reference: https://www.geeksforgeeks.org/check-if-two-given-line-segments-intersect/
     // Given three colinear points p, q, r, the function checks if
     // point q lies on line segment 'pr'
@@ -311,9 +296,47 @@ namespace utils::math {
         auto bd = b[0] * b[0] + b[1] * b[1];
         auto cd = c[0] * c[0] + c[1] * c[1];
         auto D = 2 * (a[0] * (b[1] - c[1]) + b[0] * (c[1] - a[1]) + c[0] * (a[1] - b[1]));
-        return glm::vec2(
-                1.0 / D * (ad * (b[1] - c[1]) + bd * (c[1] - a[1]) + cd * (a[1] - b[1])),
-                1.0 / D * (ad * (c[0] - b[0]) + bd * (a[0] - c[0]) + cd * (b[0] - a[0]))
-        );
+        return {
+        	1.0 / D * (ad * (b[1] - c[1]) + bd * (c[1] - a[1]) + cd * (a[1] - b[1])),
+        	1.0 / D * (ad * (c[0] - b[0]) + bd * (a[0] - c[0]) + cd * (b[0] - a[0]))
+        };
     }
+
+    PointFinder::PointFinder(std::vector<Point_2> sites) : m_points(std::move(sites)), m_collision_tree(m_points) {
+    	m_collision_tree.refine();
+    }
+
+    PointFinder::PointFinder(std::vector<double> coords) : PointFinder(convert_to_point_2(std::move(coords))) {}
+
+    Point_2 PointFinder::operator[](const Point_2& source) const {
+    	Point_2 target;
+    	m_collision_tree.nearest_neighbors(source, 1, boost::make_function_output_iterator([&](const Point_2& k) {
+			target = k;
+		}));
+		return target;
+    }
+
+    Point_2 PointFinder::find_closest(const Point_2& p) const {
+    	Point_2 target{p};
+    	m_collision_tree.nearest_neighbors(p, 1, boost::make_function_output_iterator([&](const Point_2& k) {
+    		target = k;
+    	}));
+    	return target;
+    }
+
+    const utils::math::Quadtree &PointFinder::get_quadtree() const {
+    	return m_collision_tree;
+	}
+
+	const std::vector<Point_2> &PointFinder::get_points() const {
+    	return m_points;
+    }
+
+	std::vector<Point_2> PointFinder::convert_to_point_2(std::vector<double> coords) {
+    	assert(coords.size() % 2 == 0);
+    	std::vector<Point_2> points;
+    	for(auto i = 0; i < coords.size(); i+= 2)
+    		points.emplace_back(coords[i], coords[i+1]);
+		return points;
+	}
 } // namespace utils::math

@@ -5,33 +5,44 @@
 #ifndef UTILS_MATH_UTIL_H
 #define UTILS_MATH_UTIL_H
 
+#include <bullet/LinearMath/btVector3.h>
+#include <CGAL/Simple_cartesian.h>
+#include <CGAL/Quadtree.h>
 #include <fmt/format.h>
 #include <functional>
 #include <glm/glm.hpp>
-#include <LinearMath/btVector3.h>
 #include <string>
 #include <vector>
 
 
-namespace std {
-    template <>
-    struct hash<glm::vec2> {
-        size_t operator()(const glm::vec2& p) const {
-            return hash<std::string>()(fmt::format("{}:{}", p.x, p.y));
-        }
-    };
-
-    template <>
-    struct hash<glm::vec3> {
-        size_t operator()(const glm::vec3& p) const {
-            return hash<std::string>()(fmt::format("{}:{}:{}", p.x, p.y, p.z));
-        }
-    };
-} // namespace std
-
 namespace utils::math {
+	typedef CGAL::Simple_cartesian<double> Kernel;
+	typedef Kernel::Point_2 Point_2;
+	typedef CGAL::Quadtree<Kernel, std::vector<Point_2>> Quadtree;
+
     struct rect {
         double x, y, w, h;
+    };
+
+    // Convenience wrapper for quadtree
+    class PointFinder {
+    public:
+    	explicit PointFinder(std::vector<Point_2> sites);
+
+    	explicit PointFinder(std::vector<double> coords);
+
+    	Point_2 operator[](const Point_2& p) const;
+
+    	Point_2 find_closest(const Point_2& p) const;
+
+    	[[nodiscard]] const Quadtree& get_quadtree() const;
+
+    	[[nodiscard]] const std::vector<Point_2>& get_points() const;
+    private:
+    	std::vector<Point_2> m_points{};
+    	Quadtree m_collision_tree;
+
+    	static std::vector<Point_2> convert_to_point_2(std::vector<double> coords);
     };
 
     int binomial_coeff(int n, int k);
@@ -57,8 +68,6 @@ namespace utils::math {
     bool do_intersect(glm::vec2 p1, glm::vec2 q1, glm::vec2 p2, glm::vec2 q2);
 
     glm::vec2 compute_triangle_circumcenter(glm::vec2 a, glm::vec2 b, glm::vec2 c);
-
-    std::vector<glm::vec2> triangulate(const std::vector<double> &coords);
 
     /* 2-D utils */
     std::vector<glm::vec2> generate_bezier_curve(std::vector<glm::vec2> control_points, double step_size);
@@ -92,5 +101,28 @@ namespace utils::math {
     // via matrix operations
     // TODO: std::vector<float> bezier_matrix(std::vector<float> control_points, double step_size, int dimension);
 } // namespace utils::math
+
+namespace std {
+	template <>
+	struct hash<glm::vec2> {
+		size_t operator()(const glm::vec2& p) const {
+			return hash<std::string>()(fmt::format("{}:{}", p.x, p.y));
+		}
+	};
+
+	template <>
+	struct hash<glm::vec3> {
+		size_t operator()(const glm::vec3& p) const {
+			return hash<std::string>()(fmt::format("{}:{}:{}", p.x, p.y, p.z));
+		}
+	};
+
+	template <>
+	struct hash<utils::math::Point_2> {
+		size_t operator()(const utils::math::Point_2& p) const {
+			return hash<std::string>()(fmt::format("{}:{}", p.x(), p.y()));
+		}
+	};
+} // namespace std
 
 #endif //UTILS_MATH_UTIL_H

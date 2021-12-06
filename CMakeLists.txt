@@ -11,11 +11,11 @@ target_link_libraries(utils
         OpenGL::GL
         GLEW
         GLFW
+        LinearMath
         CGAL
         fmt
         nlohmann_json_schema_validator
         assimp
-        LinearMath
         png)
 target_link_directories(utils PRIVATE
         /opt/homebrew/Cellar/glew/2.2.0_1/lib

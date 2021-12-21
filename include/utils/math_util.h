@@ -8,6 +8,11 @@
 #include <bullet/LinearMath/btVector3.h>
 #include <CGAL/Simple_cartesian.h>
 #include <CGAL/Quadtree.h>
+#include <CGAL/point_generators_2.h>
+#include <CGAL/Orthogonal_k_neighbor_search.h>
+#include <CGAL/Search_traits_2.h>
+#include <list>
+#include <cmath>
 #include <fmt/format.h>
 #include <functional>
 #include <glm/glm.hpp>
@@ -19,29 +24,30 @@ namespace utils::math {
 	typedef CGAL::Simple_cartesian<double> Kernel;
 	typedef Kernel::Point_2 Point_2;
 	typedef CGAL::Quadtree<Kernel, std::vector<Point_2>> Quadtree;
+	typedef CGAL::Search_traits_2<Kernel> TreeTraits;
+	typedef CGAL::Orthogonal_k_neighbor_search<TreeTraits> Neighbor_search;
 
     struct rect {
         double x, y, w, h;
     };
 
-    // Convenience wrapper for quadtree
+    // Convenience wrapper for quadtree/kdtree
     class PointFinder {
     public:
     	explicit PointFinder(std::vector<Point_2> sites);
 
     	explicit PointFinder(std::vector<double> coords);
 
-    	Point_2 operator[](const Point_2& p) const;
+    	Point_2 operator[](const Point_2& query) const;
 
-    	Point_2 find_closest(const Point_2& p) const;
-
-    	[[nodiscard]] const Quadtree& get_quadtree() const;
+    	Point_2 find_closest(const Point_2& query) const;
 
     	[[nodiscard]] const std::vector<Point_2>& get_points() const;
     private:
-    	std::vector<Point_2> m_points{};
+	    std::vector<Point_2> m_points{};
+#ifdef USE_QUADTREE
     	Quadtree m_collision_tree;
-
+#endif
     	static std::vector<Point_2> convert_to_point_2(std::vector<double> coords);
     };
 

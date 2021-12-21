@@ -302,31 +302,42 @@ namespace utils::math {
         };
     }
 
-    PointFinder::PointFinder(std::vector<Point_2> sites) : m_points(std::move(sites)), m_collision_tree(m_points) {
-    	m_collision_tree.refine();
+    PointFinder::PointFinder(std::vector<Point_2> sites) : m_points(std::move(sites)) {
+#ifdef USE_QUADTREE
+	    m_collision_tree(m_points);
+	    m_collision_tree.refine();
+#endif
     }
 
     PointFinder::PointFinder(std::vector<double> coords) : PointFinder(convert_to_point_2(std::move(coords))) {}
 
-    Point_2 PointFinder::operator[](const Point_2& source) const {
+    Point_2 PointFinder::operator[](const Point_2& query) const {
     	Point_2 target;
-    	m_collision_tree.nearest_neighbors(source, 1, boost::make_function_output_iterator([&](const Point_2& k) {
-			target = k;
-		}));
+#ifndef USE_QUADTREE
+	    Neighbor_search::Tree tree(m_points.begin(), m_points.end());
+	    Neighbor_search search(tree, query, 1);
+		target = search.begin()->first;
+#else
+	    m_collision_tree.nearest_neighbors(query, 1, boost::make_function_output_iterator([&](const Point_2& k) {
+		    target = k;
+	    }));
+#endif
 		return target;
     }
 
-    Point_2 PointFinder::find_closest(const Point_2& p) const {
-    	Point_2 target{p};
-    	m_collision_tree.nearest_neighbors(p, 1, boost::make_function_output_iterator([&](const Point_2& k) {
+	Point_2 PointFinder::find_closest(const Point_2& query) const {
+    	Point_2 target{query};
+#ifndef USE_QUADTREE
+		Neighbor_search::Tree tree(m_points.begin(), m_points.end());
+	    Neighbor_search search(tree, query, 1);
+		target = search.begin()->first;
+#else
+    	m_collision_tree.nearest_neighbors(query, 1, boost::make_function_output_iterator([&](const Point_2& k) {
     		target = k;
     	}));
+#endif
     	return target;
     }
-
-    const utils::math::Quadtree &PointFinder::get_quadtree() const {
-    	return m_collision_tree;
-	}
 
 	const std::vector<Point_2> &PointFinder::get_points() const {
     	return m_points;

@@ -5,6 +5,7 @@
 #ifndef UTILS_CONCEPTS_H
 #define UTILS_CONCEPTS_H
 
+#include <vector>
 #include <type_traits>
 
 
@@ -20,7 +21,7 @@ namespace std {
 namespace utils::concepts {
 	template <typename T, typename Ret = T*>
 	concept GraphNodeConcept = requires(T node) {
-		{ node.neighbors() } -> std::convertible_to<vector<Ret>>;
+		{ node.neighbors() } -> std::convertible_to<std::vector<Ret>>;
 	};
 
 	template <typename T, typename Ret = T*>
@@ -30,11 +31,20 @@ namespace utils::concepts {
 
 	template <typename T, typename Ret = T*>
 	concept ParentNodeConcept = requires(T node) {
-		{ node.children() } -> std::convertible_to<vector<Ret>>;
+		{ node.children() } -> std::convertible_to<std::vector<Ret>>;
+	};
+
+	template <typename T, typename Ret = T*>
+	concept BinaryParentNodeConcept = requires(T node) {
+		{ node.left() } -> std::convertible_to<Ret>;
+		{ node.right() } -> std::convertible_to<Ret>;
 	};
 
 	template <typename T, typename Ret = T*>
 	concept TreeNodeConcept = ChildNodeConcept<T, Ret> && ParentNodeConcept<T, Ret>;
+
+	template <typename T, typename Ret = T*>
+	concept BinaryTreeNodeConcept = ChildNodeConcept<T, Ret> && BinaryParentNodeConcept<T, Ret>;
 
 	template <typename T, typename Ret = T*>
 	concept ForwardLinkedNodeConcept = requires(T node) {

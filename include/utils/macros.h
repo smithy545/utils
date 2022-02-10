@@ -10,13 +10,12 @@
 
 
 #define PTR(CLASS) typedef std::shared_ptr<CLASS> Ptr
-#define SP(X) std::shared_ptr<X>
+#define USE_PTR(CLASS) using Ptr = std::shared_ptr<CLASS>
 #define PLACEHOLDER
 #define MOVE(X) std::move(X)
 #define NOOP(...)
 #define ID(X) X
 #define REF(X) & X
-#define EMPTYOP
 
 // Private var base
 #define _DECLARE(TYPE, NAME, ACCESS) ACCESS: TYPE m_##NAME
@@ -29,34 +28,22 @@
 // Useful Getter/Setter permutations
 #define GET(NAME, TYPE, ACCESS) GETFUNC(NAME, TYPE, ACCESS, inline, get, const)
 #define GET_BOOL(NAME, _, ACCESS) GETFUNC(NAME, bool, ACCESS, inline, is,  const)
-#define GET_REF(NAME, TYPE, ACCESS) GETFUNC(NAME, TYPE, ACCESS, inline, &get, EMPTYOP)
+#define GET_REF(NAME, TYPE, ACCESS) GETFUNC(NAME, TYPE, ACCESS, inline, &get, PLACEHOLDER)
 #define GET_CREF(NAME, TYPE, ACCESS) GETFUNC(NAME, const TYPE, ACCESS, inline, &get, const)
 #define SET(NAME, TYPE, ACCESS) SETFUNC(NAME, TYPE, ACCESS, inline, set, ID, ID)
-#define MOVE_AND_SET(NAME, TYPE, ACCESS) SETFUNC(NAME, TYPE, ACCESS, inline, set, MOVE, ID)
 #define SET_REF(NAME, TYPE, ACCESS) SETFUNC(NAME, TYPE, ACCESS, inline, set, ID, REF)
 
 // Useful permutations of var base
-#define CONSTVAR(TYPE, NAME, ACCESS) GET(NAME, TYPE, ACCESS) _DECLARE(const TYPE, NAME, private)
 #define VAR(TYPE, NAME, GET_ACCESS, SET_ACCESS) _VAR(TYPE, NAME, GET, GET_ACCESS, SET, SET_ACCESS)
 #define VAR_GET(TYPE, NAME, ACCESS) _VAR(TYPE, NAME, GET, ACCESS, NOOP, PLACEHOLDER)
 #define VAR_SET(TYPE, NAME, ACCESS) _VAR(TYPE, NAME, NOOP, PLACEHOLDER, SET, ACCESS)
 
-// BVAR: boolean var gets use "isX" instead of "getX"
+// BVAR: boolean var gets use "is_X" instead of "get_X"
 #define BVAR(NAME, GET_ACCESS, SET_ACCESS) _VAR(bool, NAME, GET_BOOL, GET_ACCESS, SET, SET_ACCESS)
 #define BVAR_GET(NAME, ACCESS) _VAR(bool, NAME, GET_BOOL, ACCESS, NOOP, PLACEHOLDER)
 
-// REFVAR: var that is moved with refs
-#define REFVAR(TYPE, NAME, GET_ACCESS, SET_ACCESS) _VAR(TYPE, NAME, GET_REF, GET_ACCESS, SET_REF, SET_ACCESS)
-#define REFVAR_GET(TYPE, NAME, ACCESS) _VAR(TYPE, NAME, GET_REF, ACCESS, NOOP, PLACEHOLDER)
-#define REFVAR_SET(TYPE, NAME, ACCESS) _VAR(TYPE, NAME, NOOP, PLACEHOLDER, SET_REF, ACCESS)
-
-// CREFVAR: const var that is accessed with refs
+// CREFVAR: var that is accessed with constant refs
 #define CREFVAR(TYPE, NAME, GET_ACCESS, SET_ACCESS) _VAR(TYPE, NAME, GET_CREF, GET_ACCESS, SET_REF, SET_ACCESS)
 #define CREFVAR_GET(TYPE, NAME, ACCESS) _VAR(TYPE, NAME, GET_CREF, ACCESS, NOOP, PLACEHOLDER)
-
-// MVAR: var that gets moved on set
-#define MVAR(TYPE, NAME, GET_ACCESS, SET_ACCESS) _VAR(TYPE, NAME, GET, GET_ACCESS, MOVE_AND_SET, SET_ACCESS)
-#define MVAR_REF(TYPE, NAME, GET_ACCESS, SET_ACCESS) _VAR(TYPE, NAME, GET_REF, GET_ACCESS, MOVE_AND_SET, SET_ACCESS)
-#define MVAR_SET(TYPE, NAME, ACCESS) _VAR(TYPE, NAME, NOOP, PLACEHOLDER, MOVE_AND_SET, ACCESS)
 
 #endif //UTILS_MACROS_H

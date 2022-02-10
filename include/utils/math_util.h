@@ -6,11 +6,6 @@
 #define UTILS_MATH_UTIL_H
 
 #include <bullet/LinearMath/btVector3.h>
-#include <CGAL/Simple_cartesian.h>
-#include <CGAL/Quadtree.h>
-#include <CGAL/point_generators_2.h>
-#include <CGAL/Orthogonal_k_neighbor_search.h>
-#include <CGAL/Search_traits_2.h>
 #include <list>
 #include <cmath>
 #include <fmt/format.h>
@@ -21,35 +16,9 @@
 
 
 namespace utils::math {
-	typedef CGAL::Simple_cartesian<double> Kernel;
-	typedef Kernel::Point_2 Point_2;
-	typedef CGAL::Quadtree<Kernel, std::vector<Point_2>> Quadtree;
-	typedef CGAL::Search_traits_2<Kernel> TreeTraits;
-	typedef CGAL::Orthogonal_k_neighbor_search<TreeTraits> Neighbor_search;
-
-    struct rect {
-        double x, y, w, h;
-    };
-
-    // Convenience wrapper for quadtree/kdtree
-    class PointFinder {
-    public:
-    	explicit PointFinder(std::vector<Point_2> sites);
-
-    	explicit PointFinder(std::vector<double> coords);
-
-    	Point_2 operator[](const Point_2& query) const;
-
-    	Point_2 find_closest(const Point_2& query) const;
-
-    	[[nodiscard]] const std::vector<Point_2>& get_points() const;
-    private:
-	    std::vector<Point_2> m_points{};
-#ifdef USE_QUADTREE
-    	Quadtree m_collision_tree;
-#endif
-    	static std::vector<Point_2> convert_to_point_2(std::vector<double> coords);
-    };
+	struct rect {
+		double x, y, w, h;
+	};
 
     int binomial_coeff(int n, int k);
 
@@ -80,7 +49,7 @@ namespace utils::math {
 
     std::vector<double> generate_parabola(std::vector<double> x, double a = 1, double b = 0, double c = 0);
 
-    /* 3-D utils */
+	/* 3-D utils */
     std::vector<glm::vec3> generate_bezier_curve(std::vector<glm::vec3> control_points, double step_size);
 
     std::vector<glm::vec3> generate_sphere(double radius, double phi_step, double theta_step);
@@ -120,13 +89,6 @@ namespace std {
 	struct hash<glm::vec3> {
 		size_t operator()(const glm::vec3& p) const {
 			return hash<std::string>()(fmt::format("{}:{}:{}", p.x, p.y, p.z));
-		}
-	};
-
-	template <>
-	struct hash<utils::math::Point_2> {
-		size_t operator()(const utils::math::Point_2& p) const {
-			return hash<std::string>()(fmt::format("{}:{}", p.x(), p.y()));
 		}
 	};
 } // namespace std

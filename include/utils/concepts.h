@@ -1,21 +1,32 @@
-//
-// Created by Philip Smith on 2/10/22.
-//
+/* Created by Philip Smith on 2/10/22.
+MIT License
+
+Copyright (c) 2021 Philip Arturo Smith
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
 
 #ifndef UTILS_CONCEPTS_H
 #define UTILS_CONCEPTS_H
 
 #include <vector>
 #include <type_traits>
-
-
-namespace std {
-	template <class From, class To>
-	concept convertible_to = std::is_convertible_v<From, To> &&
-	requires {
-		static_cast<To>(std::declval<From>());
-	};
-} // namespace std
 
 
 namespace utils::concepts {
@@ -72,6 +83,19 @@ namespace utils::concepts {
 	template <typename T, typename Ret = T*>
 	concept MutableDoublyLinkedNodeConcept = MutableForwardLinkedNodeConcept<T, Ret> && MutableBackwardLinkedNodeConcept<T, Ret>;
 
+	template <typename T>
+	concept PointerConcept = std::is_pointer_v<T>;
+
+	template <typename T>
+	concept SmartPointerConcept = requires (T val) {
+		{ val.get() } -> PointerConcept;
+	};
+
+	template <typename T>
+	concept PointerConvertible = PointerConcept<T> || SmartPointerConcept<T>;
+
+	template <typename T>
+	concept HasPtr = SmartPointerConcept<typename T::Ptr>;
 } // namespace utils::concepts
 
 #endif //UTILS_CONCEPTS_H

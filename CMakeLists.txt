@@ -12,23 +12,21 @@ target_link_libraries(utils
         GLEW
         GLFW
         LinearMath
-        CGAL
-        fmt
         nlohmann_json_schema_validator
         assimp
         png)
 target_link_directories(utils PRIVATE
+        /opt/homebrew/Cellar/assimp/5.2.4/lib
+        /opt/homebrew/Cellar/bullet/3.24/lib
         /opt/homebrew/Cellar/glew/2.2.0_1/lib
-        /opt/homebrew/Cellar/glfw/3.3.4/lib
-        /opt/homebrew/Cellar/assimp/5.0.1/lib
-        /opt/homebrew/Cellar/bullet/3.17/lib)
+        /opt/homebrew/Cellar/glfw/3.3.8/lib)
 target_include_directories(utils
         PRIVATE
-        ../../external/delaunator-cpp/include
         ../../external/libpng
         /opt/homebrew/Cellar/glew/2.2.0_1/include
         /opt/homebrew/Cellar/glm/0.9.9.8/include
-        /opt/homebrew/Cellar/glfw/3.3.4/include
-        /opt/homebrew/Cellar/assimp/5.0.1/include
-        /opt/homebrew/Cellar/bullet/3.17/include/bullet
-        PUBLIC include)
+        /opt/homebrew/Cellar/glfw/3.3.8/include
+        /opt/homebrew/Cellar/assimp/5.2.4/include
+        /opt/homebrew/Cellar/bullet/3.24/include/bullet
+        PUBLIC
+        include)

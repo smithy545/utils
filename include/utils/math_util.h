@@ -25,7 +25,7 @@ SOFTWARE.
 #ifndef UTILS_MATH_UTIL_H
 #define UTILS_MATH_UTIL_H
 
-#include <bullet/LinearMath/btVector3.h>
+#include <LinearMath/btVector3.h>
 #include <list>
 #include <cmath>
 #include <fmt/format.h>

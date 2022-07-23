@@ -30,72 +30,72 @@ SOFTWARE.
 
 
 namespace utils::concepts {
-	template <typename T, typename Ret = T*>
-	concept GraphNodeConcept = requires(T node) {
-		{ node.neighbors() } -> std::convertible_to<std::vector<Ret>>;
-	};
+template <typename T, typename Ret = T*>
+concept GraphNodeConcept = requires(T node) {
+	{ node.neighbors() } -> std::convertible_to<std::vector<Ret>>;
+};
 
-	template <typename T, typename Ret = T*>
-	concept ChildNodeConcept = requires(T node) {
-		{ node.parent() } -> std::convertible_to<Ret>;
-	};
+template <typename T, typename Ret = T*>
+concept ChildNodeConcept = requires(T node) {
+	{ node.parent() } -> std::convertible_to<Ret>;
+};
 
-	template <typename T, typename Ret = T*>
-	concept ParentNodeConcept = requires(T node) {
-		{ node.children() } -> std::convertible_to<std::vector<Ret>>;
-	};
+template <typename T, typename Ret = T*>
+concept ParentNodeConcept = requires(T node) {
+	{ node.children() } -> std::convertible_to<std::vector<Ret>>;
+};
 
-	template <typename T, typename Ret = T*>
-	concept BinaryParentNodeConcept = requires(T node) {
-		{ node.left() } -> std::convertible_to<Ret>;
-		{ node.right() } -> std::convertible_to<Ret>;
-	};
+template <typename T, typename Ret = T*>
+concept BinaryParentNodeConcept = requires(T node) {
+	{ node.left() } -> std::convertible_to<Ret>;
+	{ node.right() } -> std::convertible_to<Ret>;
+};
 
-	template <typename T, typename Ret = T*>
-	concept TreeNodeConcept = ChildNodeConcept<T, Ret> && ParentNodeConcept<T, Ret>;
+template <typename T, typename Ret = T*>
+concept TreeNodeConcept = ChildNodeConcept<T, Ret> && ParentNodeConcept<T, Ret>;
 
-	template <typename T, typename Ret = T*>
-	concept BinaryTreeNodeConcept = ChildNodeConcept<T, Ret> && BinaryParentNodeConcept<T, Ret>;
+template <typename T, typename Ret = T*>
+concept BinaryTreeNodeConcept = ChildNodeConcept<T, Ret> && BinaryParentNodeConcept<T, Ret>;
 
-	template <typename T, typename Ret = T*>
-	concept ForwardLinkedNodeConcept = requires(T node) {
-		{ node.next() } -> std::convertible_to<Ret>;
-	};
+template <typename T, typename Ret = T*>
+concept ForwardLinkedNodeConcept = requires(T node) {
+	{ node.next() } -> std::convertible_to<Ret>;
+};
 
-	template <typename T, typename Ret = T*>
-	concept MutableForwardLinkedNodeConcept = ForwardLinkedNodeConcept<T> && requires(T node, Ret inserted) {
-		{ node.set_next(inserted) } -> std::convertible_to<void>;
-	};
+template <typename T, typename Ret = T*>
+concept MutableForwardLinkedNodeConcept = ForwardLinkedNodeConcept<T> && requires(T node, Ret inserted) {
+	{ node.set_next(inserted) } -> std::convertible_to<void>;
+};
 
-	template <typename T, typename Ret = T*>
-	concept BackwardLinkedNodeConcept = requires(T node) {
-		{ node.previous() } -> std::convertible_to<Ret>;
-	};
+template <typename T, typename Ret = T*>
+concept BackwardLinkedNodeConcept = requires(T node) {
+	{ node.previous() } -> std::convertible_to<Ret>;
+};
 
-	template <typename T, typename Ret = T*>
-	concept MutableBackwardLinkedNodeConcept = BackwardLinkedNodeConcept<T> && requires(T node, Ret inserted) {
-		{ node.set_previous(inserted) } -> std::convertible_to<void>;
-	};
+template <typename T, typename Ret = T*>
+concept MutableBackwardLinkedNodeConcept = BackwardLinkedNodeConcept<T> && requires(T node, Ret inserted) {
+	{ node.set_previous(inserted) } -> std::convertible_to<void>;
+};
 
-	template <typename T, typename Ret = T*>
-	concept DoublyLinkedNodeConcept = ForwardLinkedNodeConcept<T, Ret> && BackwardLinkedNodeConcept<T, Ret>;
+template <typename T, typename Ret = T*>
+concept DoublyLinkedNodeConcept = ForwardLinkedNodeConcept<T, Ret> && BackwardLinkedNodeConcept<T, Ret>;
 
-	template <typename T, typename Ret = T*>
-	concept MutableDoublyLinkedNodeConcept = MutableForwardLinkedNodeConcept<T, Ret> && MutableBackwardLinkedNodeConcept<T, Ret>;
+template <typename T, typename Ret = T*>
+concept MutableDoublyLinkedNodeConcept = MutableForwardLinkedNodeConcept<T, Ret> && MutableBackwardLinkedNodeConcept<T, Ret>;
 
-	template <typename T>
-	concept PointerConcept = std::is_pointer_v<T>;
+template <typename T>
+concept PointerConcept = std::is_pointer_v<T>;
 
-	template <typename T>
-	concept SmartPointerConcept = requires (T val) {
-		{ val.get() } -> PointerConcept;
-	};
+template <typename T>
+concept SmartPointerConcept = requires (T val) {
+	{ val.get() } -> PointerConcept;
+};
 
-	template <typename T>
-	concept PointerConvertible = PointerConcept<T> || SmartPointerConcept<T>;
+template <typename T>
+concept PointerConvertible = PointerConcept<T> || SmartPointerConcept<T>;
 
-	template <typename T>
-	concept HasPtr = SmartPointerConcept<typename T::Ptr>;
+template <typename T>
+concept HasPtr = SmartPointerConcept<typename T::Ptr>;
 } // namespace utils::concepts
 
 #endif //UTILS_CONCEPTS_H

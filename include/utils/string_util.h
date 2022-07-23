@@ -29,7 +29,7 @@ SOFTWARE.
 
 
 namespace utils::string {
-    std::string uuid4();
+std::string uuid4();
 } // namespace utils::string
 
 #endif //UTILS_STRING_UTIL_H

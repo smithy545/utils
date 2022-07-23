@@ -33,70 +33,70 @@ SOFTWARE.
 using namespace utils::concepts;
 
 namespace utils {
-	template <typename T, typename Ref = T*> requires ParentNodeConcept<T, Ref>
-	void traverse_tree_recursive(Ref root, std::function<void(Ref)> op) {
-		op(root);
-		for (auto child: root->children())
-			traverse_tree_recursive<T, Ref>(child, op);
+template <typename T, typename Ref = T*> requires ParentNodeConcept<T, Ref>
+void traverse_tree_recursive(Ref root, std::function<void(Ref)> op) {
+	op(root);
+	for (auto child: root->children())
+		traverse_tree_recursive<T, Ref>(child, op);
+}
+
+template <typename T, typename Ref = T*> requires ParentNodeConcept<T, Ref>
+void traverse_tree(Ref root, std::function<void(Ref)> op) {
+	op(root);
+
+	std::vector<Ref> children;
+	for(auto child: root->children())
+		children.push_back(child);
+
+	while(!children.empty()) {
+		std::vector<Ref> next_layer{};
+		for(auto child: children) {
+			op(child);
+			for (auto grandchild: child->children())
+				next_layer.push_back(grandchild);
+		}
+		children = next_layer;
 	}
+}
 
-	template <typename T, typename Ref = T*> requires ParentNodeConcept<T, Ref>
-	void traverse_tree(Ref root, std::function<void(Ref)> op) {
-		op(root);
-
-		std::vector<Ref> children;
-		for(auto child: root->children())
-			children.push_back(child);
-
-		while(!children.empty()) {
-			std::vector<Ref> next_layer{};
-			for(auto child: children) {
-				op(child);
+template <typename T, typename Ref = T*> requires ParentNodeConcept<T, Ref>
+void traverse_tree_with_predicate(Ref root, std::function<bool(Ref)> op) {
+	if(!op(root))
+		return;
+	std::vector<Ref> children;
+	for(auto child: root->children())
+		children.push_back(child);
+	while(!children.empty()) {
+		std::vector<Ref> next_layer{};
+		for(auto child: children) {
+			if(op(child)) {
 				for (auto grandchild: child->children())
 					next_layer.push_back(grandchild);
 			}
-			children = next_layer;
 		}
+		children = next_layer;
 	}
+}
 
-	template <typename T, typename Ref = T*> requires ParentNodeConcept<T, Ref>
-	void traverse_tree_with_predicate(Ref root, std::function<bool(Ref)> op) {
-		if(!op(root))
-			return;
-		std::vector<Ref> children;
-		for(auto child: root->children())
-			children.push_back(child);
-		while(!children.empty()) {
-			std::vector<Ref> next_layer{};
-			for(auto child: children) {
-				if(op(child)) {
-					for (auto grandchild: child->children())
-						next_layer.push_back(grandchild);
-				}
-			}
-			children = next_layer;
-		}
-	}
+template <typename T, typename Ptr = T*>
+requires ForwardLinkedNodeConcept<T, Ptr> && PointerConvertible<Ptr>
+void forward_traverse_list(gsl::not_null<Ptr> head, std::function<void(Ptr)> op) {
+	Ptr ptr = head;
+	do {
+		op(ptr);
+		ptr = ptr->next();
+	} while(ptr != nullptr);
+}
 
-	template <typename T, typename Ptr = T*>
-	requires ForwardLinkedNodeConcept<T, Ptr> && PointerConvertible<Ptr>
-	void forward_traverse_list(gsl::not_null<Ptr> head, std::function<void(Ptr)> op) {
-		Ptr ptr = head;
-		do {
-			op(ptr);
-			ptr = ptr->next();
-		} while(ptr != nullptr);
-	}
-
-	template <typename T, typename Ptr = T*>
-	requires BackwardLinkedNodeConcept<T, Ptr> && PointerConvertible<Ptr>
-	void backward_traverse_list(gsl::not_null<Ptr> tail, std::function<void(Ptr)> op) {
-		Ptr ptr = tail;
-		do {
-			op(ptr);
-			ptr = ptr->previous();
-		} while(ptr != nullptr);
-	}
+template <typename T, typename Ptr = T*>
+requires BackwardLinkedNodeConcept<T, Ptr> && PointerConvertible<Ptr>
+void backward_traverse_list(gsl::not_null<Ptr> tail, std::function<void(Ptr)> op) {
+	Ptr ptr = tail;
+	do {
+		op(ptr);
+		ptr = ptr->previous();
+	} while(ptr != nullptr);
+}
 } // namespace utils
 
 #endif //UTILS_GRAPH_TRAVERSAL_H

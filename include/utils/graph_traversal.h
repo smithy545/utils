@@ -32,7 +32,7 @@ SOFTWARE.
 
 using namespace utils::concepts;
 
-namespace utils {
+namespace utils::graph {
 template <typename T, typename Ref = T*> requires ParentNodeConcept<T, Ref>
 void traverse_tree_recursive(Ref root, std::function<void(Ref)> op) {
 	op(root);
@@ -97,6 +97,6 @@ void backward_traverse_list(gsl::not_null<Ptr> tail, std::function<void(Ptr)> op
 		ptr = ptr->previous();
 	} while(ptr != nullptr);
 }
-} // namespace utils
+} // namespace utils::graph
 
 #endif //UTILS_GRAPH_TRAVERSAL_H

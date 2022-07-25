@@ -22,8 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#ifndef UTILS_GRAPH_CONCEPTS_H
-#define UTILS_GRAPH_CONCEPTS_H
+#ifndef UTILS_GRAPH_POLY_H
+#define UTILS_GRAPH_POLY_H
 
 #include <cstddef>
 #include <concepts>
@@ -36,7 +36,7 @@ SOFTWARE.
 using std::vector;
 
 // define entt node concepts for use in graph traversal algorithms. Similar concepts can be found in utils/concepts.h
-namespace utils {
+namespace utils::graph {
 template <typename Node>
 struct GraphNode : entt::type_list<vector<Node>()> {
 	template <typename Base>
@@ -180,6 +180,6 @@ struct MutableDoublyLinkedNode : entt::type_list_cat_t<
 			typename MutableBackwardLinkedNode<Node>::template impl<Type>,
 			typename MutableForwardLinkedNode<Node>::template impl<Type>>;
 };
-} // namespace utils
+} // namespace utils::graph
 
-#endif //UTILS_GRAPH_CONCEPTS_H
+#endif //UTILS_GRAPH_POLY_H

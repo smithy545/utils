@@ -29,14 +29,19 @@ SOFTWARE.
 #include <concepts>
 #include <entt/entt.hpp>
 #include <type_traits>
-#include "concepts.h"
+#include <utils/concepts.h>
 #include <vector>
 
 
 using std::vector;
 
-// define entt node concepts for use in graph traversal algorithms. Similar concepts can be found in utils/concepts.h
+// define entt node polymorphic classes for use in graph traversal algorithms
 namespace utils::graph {
+
+// convenience method for getting type_list from Type... (no need for definition, only used in decltype)
+template<typename... Type>
+entt::type_list<Type...> as_type_list(const entt::type_list<Type...> &);
+
 template <typename Node>
 struct GraphNode : entt::type_list<vector<Node>()> {
 	template <typename Base>
@@ -180,6 +185,7 @@ struct MutableDoublyLinkedNode : entt::type_list_cat_t<
 			typename MutableBackwardLinkedNode<Node>::template impl<Type>,
 			typename MutableForwardLinkedNode<Node>::template impl<Type>>;
 };
+
 } // namespace utils::graph
 
 #endif //UTILS_GRAPH_POLY_H

@@ -22,10 +22,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <utils/string_util.h>
-
 #include <random>
 #include <sstream>
+#include <utils/string_util.h>
+
 
 namespace utils::string {
 std::random_device rd;

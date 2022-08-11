@@ -25,9 +25,9 @@ SOFTWARE.
 #ifndef UTILS_MATH_UTIL_H
 #define UTILS_MATH_UTIL_H
 
+#include <cmath>
 #include <LinearMath/btVector3.h>
 #include <list>
-#include <cmath>
 #include <fmt/format.h>
 #include <functional>
 #include <glm/glm.hpp>
@@ -36,6 +36,7 @@ SOFTWARE.
 
 
 namespace utils::math {
+
 struct rect {
 	double x, y, w, h;
 };
@@ -98,6 +99,7 @@ std::vector<float> deCasteljau_kernel(std::vector<float> points, double t, int d
 } // namespace utils::math
 
 namespace std {
+
 template <>
 struct hash<glm::vec2> {
 	size_t operator()(const glm::vec2& p) const {
@@ -111,6 +113,7 @@ struct hash<glm::vec3> {
 		return hash<std::string>()(fmt::format("{}:{}:{}", p.x, p.y, p.z));
 	}
 };
+
 } // namespace std
 
 #endif //UTILS_MATH_UTIL_H

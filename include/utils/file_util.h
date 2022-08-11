@@ -26,15 +26,15 @@ SOFTWARE.
 #define UTILS_FILE_UTIL_H
 
 #include <GL/glew.h>
-#include <nlohmann/json-schema.hpp>
 #include <nlohmann/json.hpp>
+#include <nlohmann/json-schema.hpp>
 #include <string>
 
 
 using json = nlohmann::json;
-using namespace nlohmann::json_schema;
 
 namespace utils::file {
+
 json read_json_file(const std::string &path, const json &schema = nullptr);
 
 void write_json_file(const std::string &path, const json &data);
@@ -42,6 +42,7 @@ void write_json_file(const std::string &path, const json &data);
 GLuint read_png_file_to_texture(const std::string &path);
 
 std::string read_file_to_string(const std::string &path);
+
 } // namespace utils::file
 
 #endif //UTILS_FILE_UTIL_H

@@ -22,20 +22,21 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <utils/file_util.h>
-
-#include <stdexcept>
 #include <fmt/format.h>
 #include <fstream>
 #include <iostream>
 #include <png.h>
 #include <pngstruct.h>
 #include <pnginfo.h>
+#include <stdexcept>
+#include <utils/file_util.h>
 
 
 using std::runtime_error;
+using namespace nlohmann::json_schema;
 
 namespace utils::file {
+
 json read_json_file(const std::string &path, const json &schema) {
     std::ifstream file(path);
     if (file.good()) {
@@ -181,4 +182,5 @@ void write_json_file(const std::string &path, const json &data) {
     file << data;
     file.close();
 }
+
 } // namespace utils::file

@@ -26,7 +26,6 @@ SOFTWARE.
 #define UTILS_MACROS_H
 
 #include <memory>
-#include <utility>
 
 
 #define PTR(CLASS) typedef std::shared_ptr<CLASS> Ptr

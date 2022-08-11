@@ -22,13 +22,14 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#include <utils/math_util.h>
 
 #include <boost/iterator/function_output_iterator.hpp>
 #include <utility>
+#include <utils/math_util.h>
 
 
 namespace utils::math {
+
 std::vector<int *> generated_binomial_coeffs;
 int max_generated_degree = 0;
 
@@ -321,4 +322,5 @@ glm::vec2 compute_triangle_circumcenter(glm::vec2 a, glm::vec2 b, glm::vec2 c) {
         1.0 / D * (ad * (c[0] - b[0]) + bd * (a[0] - c[0]) + cd * (b[0] - a[0]))
     };
 }
+
 } // namespace utils::math

@@ -27,7 +27,8 @@ SOFTWARE.
 
 #include <functional>
 #include <gsl/gsl>
-#include "concepts.h"
+#include <utils/concepts.h>
+#include <utils/graph_poly.h>
 
 
 using namespace utils::concepts;
@@ -97,6 +98,7 @@ void backward_traverse_list(gsl::not_null<Ptr> tail, std::function<void(Ptr)> op
 		ptr = ptr->previous();
 	} while(ptr != nullptr);
 }
+
 } // namespace utils::graph
 
 #endif //UTILS_GRAPH_TRAVERSAL_H

@@ -25,11 +25,12 @@ SOFTWARE.
 #ifndef UTILS_CONCEPTS_H
 #define UTILS_CONCEPTS_H
 
-#include <vector>
 #include <type_traits>
+#include <vector>
 
 
 namespace utils::concepts {
+
 template <typename T, typename Ret = T*>
 concept GraphNodeConcept = requires(T node) {
 	{ node.neighbors() } -> std::convertible_to<std::vector<Ret>>;
@@ -81,7 +82,8 @@ template <typename T, typename Ret = T*>
 concept DoublyLinkedNodeConcept = ForwardLinkedNodeConcept<T, Ret> && BackwardLinkedNodeConcept<T, Ret>;
 
 template <typename T, typename Ret = T*>
-concept MutableDoublyLinkedNodeConcept = MutableForwardLinkedNodeConcept<T, Ret> && MutableBackwardLinkedNodeConcept<T, Ret>;
+concept MutableDoublyLinkedNodeConcept = MutableForwardLinkedNodeConcept<T, Ret>
+        && MutableBackwardLinkedNodeConcept<T, Ret>;
 
 template <typename T>
 concept PointerConcept = std::is_pointer_v<T>;
@@ -96,6 +98,7 @@ concept PointerConvertible = PointerConcept<T> || SmartPointerConcept<T>;
 
 template <typename T>
 concept HasPtr = SmartPointerConcept<typename T::Ptr>;
+
 } // namespace utils::concepts
 
 #endif //UTILS_CONCEPTS_H

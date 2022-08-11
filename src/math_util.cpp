@@ -49,14 +49,6 @@ int binomial_coeff(int n, int k) {
     return generated_binomial_coeffs[n][k];
 }
 
-glm::vec3 bt2glm(const btVector3& vec) {
-    return glm::vec3{vec.x(), vec.y(), vec.z()};
-}
-
-btVector3 glm2bt(const glm::vec3& vec) {
-    return btVector3{vec.x, vec.y, vec.z};
-}
-
 std::vector<glm::vec2> generate_bezier_curve(std::vector<glm::vec2> control_points, double step_size) {
     if (control_points.size() <= 2) {
         return control_points;
@@ -241,6 +233,13 @@ bool in_rect(glm::vec2 p, rect r) {
        && p.y >= r.y
        && p.x < r.x + r.w
        && p.y < r.y + r.h;
+}
+
+bool in_bounds(glm::vec2 p, bounds b) {
+	return p.x >= b.top_left.x
+	       && p.y >= b.top_left.y
+	       && p.x < b.bottom_right.x
+	       && p.y < b.bottom_right.y;
 }
 
 bool check_overflow(double val) {

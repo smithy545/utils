@@ -26,7 +26,6 @@ SOFTWARE.
 #define UTILS_MATH_UTIL_H
 
 #include <cmath>
-#include <LinearMath/btVector3.h>
 #include <list>
 #include <fmt/format.h>
 #include <functional>
@@ -41,17 +40,20 @@ struct rect {
 	double x, y, w, h;
 };
 
+struct bounds {
+	glm::vec2 top_left;
+	glm::vec2 bottom_right;
+};
+
 int binomial_coeff(int n, int k);
 
 double compute_parabola_y(glm::vec2 focus, double directrix_y, double x);
 
 double compute_parabolic_collision_x(glm::vec2 left, glm::vec2 right, double directrix_y);
 
-glm::vec3 bt2glm(const btVector3& vec);
-
-btVector3 glm2bt(const glm::vec3& vec);
-
 bool in_rect(glm::vec2 p, rect r);
+
+bool in_bounds(glm::vec2 p, bounds b);
 
 bool check_overflow(double val);
 

@@ -24,11 +24,17 @@ SOFTWARE.
 
 
 #include <boost/iterator/function_output_iterator.hpp>
+#include <gsl/gsl>
+#include <random>
 #include <utility>
 #include <utils/math_util.h>
 
 
 namespace utils::math {
+
+using Kernel = CGAL::Simple_cartesian<double>;
+using TreeTraits = CGAL::Search_traits_2 <Kernel>;
+using Neighbor_search = CGAL::Orthogonal_k_neighbor_search <TreeTraits>;
 
 std::vector<int *> generated_binomial_coeffs;
 int max_generated_degree = 0;
@@ -320,6 +326,37 @@ glm::vec2 compute_triangle_circumcenter(glm::vec2 a, glm::vec2 b, glm::vec2 c) {
         1.0 / D * (ad * (b[1] - c[1]) + bd * (c[1] - a[1]) + cd * (a[1] - b[1])),
         1.0 / D * (ad * (c[0] - b[0]) + bd * (a[0] - c[0]) + cd * (b[0] - a[0]))
     };
+}
+
+Point_2 query_closest(const std::vector<Point_2>& points, const Point_2& query) {
+    Point_2 target{query};
+    Neighbor_search::Tree tree(points.begin(), points.end());
+    Neighbor_search search(tree, query, 1);
+    target = search.begin()->first;
+    return target;
+}
+
+std::vector<Point_2> generate_points(unsigned int num_points, unsigned int width, unsigned int height) {
+    Expects(width > 0);
+    Expects(height > 0);
+    std::random_device rd;
+    std::set<Point_2> points;
+    while (points.size() < num_points) {
+        Point_2 v;
+        do {
+            v = Point_2(rd() % width, rd() % height);
+        } while (points.contains(v));
+        points.insert(v);
+    }
+    return {points.begin(), points.end()};
+}
+
+std::vector<Point_2> convert_to_point_2(const std::vector<double>& coords) {
+    Expects(coords.size() % 2 == 0);
+    std::vector<Point_2> points;
+    for(auto i = 0; i < coords.size(); i+= 2)
+        points.emplace_back(coords[i], coords[i+1]);
+    return points;
 }
 
 } // namespace utils::math

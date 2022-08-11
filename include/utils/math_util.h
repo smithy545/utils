@@ -25,6 +25,10 @@ SOFTWARE.
 #ifndef UTILS_MATH_UTIL_H
 #define UTILS_MATH_UTIL_H
 
+#include <CGAL/Simple_cartesian.h>
+#include <CGAL/point_generators_2.h>
+#include <CGAL/Orthogonal_k_neighbor_search.h>
+#include <CGAL/Search_traits_2.h>
 #include <cmath>
 #include <list>
 #include <fmt/format.h>
@@ -36,6 +40,8 @@ SOFTWARE.
 
 namespace utils::math {
 
+using Point_2 = CGAL::Simple_cartesian<double>::Point_2;
+
 struct rect {
 	double x, y, w, h;
 };
@@ -44,6 +50,12 @@ struct bounds {
 	glm::vec2 top_left;
 	glm::vec2 bottom_right;
 };
+
+[[nodiscard]] Point_2 query_closest(const std::vector<Point_2> &points, const Point_2 &query);
+
+std::vector<Point_2> generate_points(unsigned int num_points, unsigned int width, unsigned int height);
+
+std::vector<Point_2> convert_to_point_2(const std::vector<double> &coords);
 
 int binomial_coeff(int n, int k);
 
@@ -113,6 +125,13 @@ template <>
 struct hash<glm::vec3> {
 	size_t operator()(const glm::vec3& p) const {
 		return hash<std::string>()(fmt::format("{}:{}:{}", p.x, p.y, p.z));
+	}
+};
+
+template <>
+struct hash<CGAL::Simple_cartesian<double>::Point_2> {
+	size_t operator()(const CGAL::Simple_cartesian<double>::Point_2& p) const {
+		return hash<string>()(fmt::format("{}:{}", p.x(), p.y()));
 	}
 };
 

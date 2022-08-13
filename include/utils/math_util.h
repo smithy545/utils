@@ -74,7 +74,7 @@ bool in_bounds(glm::vec2 p, bounds b);
 
 bool in_bounds(Point_2 p, bounds b);
 
-bool in_bounds(double x, double y, glm::vec2 p, bounds b);
+bool in_bounds(double x, double y, bounds b);
 
 bool check_overflow(double val);
 

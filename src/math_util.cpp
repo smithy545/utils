@@ -34,7 +34,7 @@ namespace utils::math {
 
 using Kernel = CGAL::Simple_cartesian<double>;
 using TreeTraits = CGAL::Search_traits_2 <Kernel>;
-using Neighbor_search = CGAL::Orthogonal_k_neighbor_search <TreeTraits>;
+using  Neighbor_search = CGAL::Orthogonal_k_neighbor_search <TreeTraits>;
 
 std::vector<int *> generated_binomial_coeffs;
 int max_generated_degree = 0;
@@ -234,6 +234,16 @@ double compute_parabolic_collision_x(glm::vec2 left, glm::vec2 right, double dir
     return (b - std::sqrt(delta)) / (2.0 * a);
 }
 
+std::vector<Point_2> query_closest(const std::vector<Point_2>& points, const Point_2& query, const std::size_t n) {
+	Point_2 target{query};
+	Neighbor_search::Tree tree(points.begin(), points.end());
+	Neighbor_search search(tree, query, n);
+	std::vector<Point_2> results;
+	for(auto hit: search)
+		results.push_back(hit.first);
+	return results;
+}
+
 bool in_rect(glm::vec2 p, rect r) {
     return p.x >= r.x
        && p.y >= r.y
@@ -241,11 +251,39 @@ bool in_rect(glm::vec2 p, rect r) {
        && p.y < r.y + r.h;
 }
 
+bool in_rect(double x, double y, rect r) {
+	return x >= r.x
+       && y >= r.y
+       && x < r.x + r.w
+       && y < r.y + r.h;
+}
+
+bool in_rect(Point_2 p, rect r) {
+	return p.x() >= r.x
+       && p.y() >= r.y
+       && p.x() < r.x + r.w
+       && p.y() < r.y + r.h;
+}
+
+bool in_bounds(Point_2 p, bounds b) {
+	return p.x() >= b.top_left.x
+       && p.y() >= b.top_left.y
+       && p.x() < b.bottom_right.x
+       && p.y() < b.bottom_right.y;
+}
+
+bool in_bounds(double x, double y, bounds b) {
+	return x >= b.top_left.x
+       && y >= b.top_left.y
+       && x < b.bottom_right.x
+       && y < b.bottom_right.y;
+}
+
 bool in_bounds(glm::vec2 p, bounds b) {
 	return p.x >= b.top_left.x
-	       && p.y >= b.top_left.y
-	       && p.x < b.bottom_right.x
-	       && p.y < b.bottom_right.y;
+       && p.y >= b.top_left.y
+       && p.x < b.bottom_right.x
+       && p.y < b.bottom_right.y;
 }
 
 bool check_overflow(double val) {
@@ -326,14 +364,6 @@ glm::vec2 compute_triangle_circumcenter(glm::vec2 a, glm::vec2 b, glm::vec2 c) {
         1.0 / D * (ad * (b[1] - c[1]) + bd * (c[1] - a[1]) + cd * (a[1] - b[1])),
         1.0 / D * (ad * (c[0] - b[0]) + bd * (a[0] - c[0]) + cd * (b[0] - a[0]))
     };
-}
-
-Point_2 query_closest(const std::vector<Point_2>& points, const Point_2& query) {
-    Point_2 target{query};
-    Neighbor_search::Tree tree(points.begin(), points.end());
-    Neighbor_search search(tree, query, 1);
-    target = search.begin()->first;
-    return target;
 }
 
 std::vector<Point_2> generate_points(unsigned int num_points, unsigned int width, unsigned int height) {

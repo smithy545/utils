@@ -51,7 +51,8 @@ struct bounds {
 	glm::vec2 bottom_right;
 };
 
-[[nodiscard]] Point_2 query_closest(const std::vector<Point_2> &points, const Point_2 &query);
+[[nodiscard]]
+std::vector<Point_2> query_closest(const std::vector<Point_2> &points, const Point_2 &query, const std::size_t n = 1);
 
 std::vector<Point_2> generate_points(unsigned int num_points, unsigned int width, unsigned int height);
 
@@ -65,7 +66,15 @@ double compute_parabolic_collision_x(glm::vec2 left, glm::vec2 right, double dir
 
 bool in_rect(glm::vec2 p, rect r);
 
+bool in_rect(Point_2 p, rect r);
+
+bool in_rect(double x, double y, rect r);
+
 bool in_bounds(glm::vec2 p, bounds b);
+
+bool in_bounds(Point_2 p, bounds b);
+
+bool in_bounds(double x, double y, glm::vec2 p, bounds b);
 
 bool check_overflow(double val);
 

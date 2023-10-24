@@ -58,6 +58,8 @@ std::vector<Point_2> generate_points(unsigned int num_points, unsigned int width
 
 std::vector<Point_2> convert_to_point_2(const std::vector<double> &coords);
 
+float uniform_random(float a = 0.f, float b = 1.f);
+
 int binomial_coeff(int n, int k);
 
 double compute_parabola_y(glm::vec2 focus, double directrix_y, double x);

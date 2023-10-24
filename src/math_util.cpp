@@ -24,7 +24,6 @@ SOFTWARE.
 
 
 #include <boost/iterator/function_output_iterator.hpp>
-#include <gsl/gsl>
 #include <random>
 #include <utility>
 #include <utils/math_util.h>
@@ -367,8 +366,8 @@ glm::vec2 compute_triangle_circumcenter(glm::vec2 a, glm::vec2 b, glm::vec2 c) {
 }
 
 std::vector<Point_2> generate_points(unsigned int num_points, unsigned int width, unsigned int height) {
-    Expects(width > 0);
-    Expects(height > 0);
+    assert(width > 0);
+    assert(height > 0);
     std::random_device rd;
     std::set<Point_2> points;
     while (points.size() < num_points) {
@@ -382,11 +381,15 @@ std::vector<Point_2> generate_points(unsigned int num_points, unsigned int width
 }
 
 std::vector<Point_2> convert_to_point_2(const std::vector<double>& coords) {
-    Expects(coords.size() % 2 == 0);
+    assert(coords.size() % 2 == 0);
     std::vector<Point_2> points;
     for(auto i = 0; i < coords.size(); i+= 2)
         points.emplace_back(coords[i], coords[i+1]);
     return points;
+}
+
+float uniform_random(float a, float b) {
+    return a + (b - a) * (static_cast<float>(rand()) / static_cast<float>(RAND_MAX));
 }
 
 } // namespace utils::math
